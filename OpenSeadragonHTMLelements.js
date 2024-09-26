@@ -94,8 +94,8 @@
       panOnly = typeof panOnly !== 'undefined' ? panOnly : false
       const e = this.getElementById(id)
       if (e !== null) {
-        const vpRect = this.viewer.viewport.imageToViewportRectangle(e.rect)
-        const vpPos = viewer.viewport.imageToViewportCoordinates(
+        const vpRect = this.viewer.world.getItemAt(e.itemIndex).imageToViewportRectangle(e.rect)
+        const vpPos = viewer.world.getItemAt(e.itemIndex).imageToViewportCoordinates(
           e.rect.x,
           e.rect.y
         )
@@ -161,19 +161,19 @@ function repositionElements(es, viewer) {
 
 function repositionElement(e, viewer) {
   const newRect = viewer.viewport.viewportToViewerElementRectangle(
-    viewer.viewport.imageToViewportRectangle(e.rect)
+    viewer.world.getItemAt(e.itemIndex).imageToViewportRectangle(e.rect)
   )
   const point = viewer.viewport.getFlip()
     ? flipPoint(
         { x: e.rect.x, y: e.rect.y },
         viewer.viewport.getRotation(),
         viewer.world
-          .getItemAt(0)
+          .getItemAt(e.itemIndex)
           .viewportToImageCoordinates(viewer.viewport.getCenter(true))
       )
     : { x: e.rect.x, y: e.rect.y }
   const pos = viewer.viewport.viewportToViewerElementCoordinates(
-    viewer.viewport.imageToViewportCoordinates(point.x, point.y)
+    viewer.world.getItemAt(e.itemIndex).imageToViewportCoordinates(point.x, point.y)
   )
   e.element.style.left = pos.x - newRect.width / 2 + 'px'
   e.element.style.top = pos.y - newRect.height / 2 + 'px'
